@@ -17,10 +17,10 @@ const Hero = () => {
             Hi, I am <span className="text-[#915eff]">Nabin Thapa</span>
           </h1>
           <p className={`${styles.heroSubText} mt-2 text-white-100`}>
-            I am a <span className="text-[#915eff]">Frontend Developer</span>{" "}
+            I am a <span className="text-[#915eff]">Software Engineer</span>{" "}
             based in Kathmandu, Nepal.
-            <br className="sm:block hidden" /> I love to build beautiful and
-            interactive websites.
+            <br className="sm:block hidden" /> I enjoy crafting little projects and tools
+            that help people in simple, meaningful ways.
           </p>
         </div>
       </div>
@@ -29,18 +29,18 @@ const Hero = () => {
       <div className="absolute xs:bottom-10 bottom-10 flex w-full justify-center items-center">
         <a href="#about">
           <div className="w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2">
-          <motion.div
-            animate={{
-              y: [0, 24, 0],
-            }}
+            <motion.div
+              animate={{
+                y: [0, 24, 0],
+              }}
 
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              repeatType: "loop",
-            }}
-            className="h-3 w-3 bg-secondary rounded-full mb-1"
-          />
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+              className="h-3 w-3 bg-secondary rounded-full mb-1"
+            />
 
           </div>
         </a>

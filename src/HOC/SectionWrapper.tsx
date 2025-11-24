@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { styles } from "../Styles";
 
-export interface SectionWrapperProps {}
+export interface SectionWrapperProps { }
 
 const SectionWrapper = (Component: React.FC, idName: string) =>
   function HOC() {
