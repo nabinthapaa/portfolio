@@ -177,6 +177,7 @@ const projects = [
     ],
     image: space,
     source_code_link: "https://github.com/Eragon580101/Space-Tourism",
+    website_link: "https://knowspace.netlify.app/",
   },
   {
     name: "Dictionary",
@@ -202,6 +203,7 @@ const projects = [
     ],
     image: dictionary,
     source_code_link: "https://github.com/Eragon580101/Dictionary",
+    website_link: "https://warm-concha-a80f46.netlify.app/",
   },
   {
     name: "Countries",
@@ -223,6 +225,7 @@ const projects = [
     ],
     image: countries,
     source_code_link: "https://github.com/Eragon580101/Countries",
+    website_link: "https://courageous-dusk-897dd4.netlify.app/"
   },
 ];
 
