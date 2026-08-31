@@ -1,5 +1,8 @@
 [build]
   command = "yarn build"
+  # Set here rather than in the UI, which still points at Vite's dist/.
+  # netlify.toml takes precedence over the dashboard's build settings.
+  publish = ".next"
 
 [build.environment]
   # Keep in sync with .nvmrc. Netlify's default is older than the tree allows:
