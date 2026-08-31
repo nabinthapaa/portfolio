@@ -1,8 +1,6 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { styles } from "../Styles";
-
-export interface SectionWrapperProps { }
+import * as motion from "framer-motion/client";
+import type React from "react";
+import { styles } from "@/styles";
 
 const SectionWrapper = (Component: React.FC, idName: string) =>
   function HOC() {
@@ -13,7 +11,9 @@ const SectionWrapper = (Component: React.FC, idName: string) =>
         viewport={{ once: true, amount: 0.25 }}
         className={`${styles.paddingX} relative w-full mx-auto max-w-7xl z-0`}
       >
-        <span className="hash-span" id={idName}>&nbsp;</span>
+        <span className="hash-span" id={idName}>
+          &nbsp;
+        </span>
         <Component />
       </motion.section>
     );
