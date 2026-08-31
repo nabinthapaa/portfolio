@@ -520,6 +520,18 @@
   dependencies:
     "@tybys/wasm-util" "^0.10.3"
 
+"@netlify/edge-functions@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@netlify/edge-functions/-/edge-functions-4.0.0.tgz#91c5f21433776da99704a62abb0da53b78c2cc50"
+  integrity sha512-0jerPQQ5mLczl7jwCRfTJsLcaiXbvPOC+Whtxxk7IHdz24OvZGjUtVHAxhppjT8wcX48I7C6oAff04QdQDMTfw==
+  dependencies:
+    "@netlify/types" "3.0.0"
+
+"@netlify/types@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@netlify/types/-/types-3.0.0.tgz#80e6a3d399b681e32b1f4ef2b75937e748ff3a65"
+  integrity sha512-zRCidsQgI4CZWrZB/kmwdPf0QbSNljakfNSLizFvrsSA3UcUrTWSBNMVKmZnob92/8ESeUN0ewXLOlffJU+ATQ==
+
 "@next/env@16.3.3":
   version "16.3.3"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-16.3.3.tgz#dd639e1f3af804a4e84ca32f2e97251d22c41ae2"

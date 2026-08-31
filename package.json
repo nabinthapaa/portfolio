@@ -23,6 +23,7 @@
     "three": "0.182.0"
   },
   "devDependencies": {
+    "@netlify/edge-functions": "^4.0.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.0.0",
     "@types/nodemailer": "^8.0.1",

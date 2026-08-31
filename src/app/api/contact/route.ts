@@ -10,6 +10,33 @@ const LIMITS = { name: 100, email: 254, message: 5000 } as const;
 
 const SEND_TIMEOUT_MS = 8_000;
 
+const RATE = { limit: 5, windowMs: 60_000 };
+
+// Netlify rejects bursts at the edge before this function is invoked (see
+// netlify/edge-functions/contact-rate-limit.ts). This is a second layer that
+// also covers local dev and non-Netlify hosts. It is per-instance, so a
+// serverless deployment can serve more than `limit` across scaled instances --
+// it blunts bursts rather than enforcing a global quota.
+const hits = new Map<string, { count: number; resetAt: number }>();
+
+const clientIp = (request: Request) =>
+  request.headers.get("x-nf-client-connection-ip") ??
+  request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+  "unknown";
+
+const isRateLimited = (ip: string) => {
+  const now = Date.now();
+  for (const [key, entry] of hits) if (entry.resetAt <= now) hits.delete(key);
+
+  const entry = hits.get(ip);
+  if (!entry) {
+    hits.set(ip, { count: 1, resetAt: now + RATE.windowMs });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > RATE.limit;
+};
+
 type Field = keyof typeof LIMITS;
 
 const readField = (body: Record<string, unknown>, field: Field) => {
@@ -49,6 +76,13 @@ const config = () => {
 };
 
 export async function POST(request: Request) {
+  if (isRateLimited(clientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many messages. Please try again in a minute." },
+      { status: 429, headers: { "Retry-After": String(RATE.windowMs / 1000) } },
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
