@@ -1,21 +1,15 @@
 "use client";
 
-import emailjs from "@emailjs/browser";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
-const EMAILJS_SERVICE = process.env.NEXT_PUBLIC_EMAILJS_SERVICE;
-const EMAILJS_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE;
-const EMAILJS_PUBLIC = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC;
-const EMAILJS_TO_NAME = process.env.NEXT_PUBLIC_EMAILJS_TO_NAME;
-const EMAILJS_TO_EMAIL = process.env.NEXT_PUBLIC_EMAILJS_TO_EMAIL;
+type Status = { kind: "idle" | "sending" } | { kind: "sent" | "error"; message: string };
 
 const inputClass =
   "bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium";
 
 const ContactForm = () => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form, setForm] = useState({ name: "", email: "", message: "", company: "" });
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -23,56 +17,42 @@ const ContactForm = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setStatus({ kind: "sending" });
 
-    if (!EMAILJS_SERVICE || !EMAILJS_TEMPLATE || !EMAILJS_PUBLIC) {
-      console.error("EmailJS environment variables are not configured.");
-      alert("An error occurred, Please try again");
-      return;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data: { error?: string } = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setStatus({ kind: "error", message: data.error ?? "Something went wrong." });
+        return;
+      }
+
+      setStatus({ kind: "sent", message: "Thanks — I'll get back to you shortly." });
+      setForm({ name: "", email: "", message: "", company: "" });
+    } catch {
+      setStatus({ kind: "error", message: "Could not reach the server. Please try again." });
     }
-
-    setLoading(true);
-    emailjs
-      .send(
-        EMAILJS_SERVICE,
-        EMAILJS_TEMPLATE,
-        {
-          from_name: form.name,
-          to_name: EMAILJS_TO_NAME,
-          from_email: form.email,
-          to_email: EMAILJS_TO_EMAIL,
-          message: form.message,
-        },
-        { publicKey: EMAILJS_PUBLIC },
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-          setLoading(false);
-          alert("Message Sent, I'll get back to you shortly");
-          setForm({ name: "", email: "", message: "" });
-        },
-        (error) => {
-          setLoading(false);
-          console.log(error);
-          alert("An error occurred, Please try again");
-        },
-      );
   };
 
+  const sending = status.kind === "sending";
+
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="mt-12 flex flex-col gap-8"
-    >
+    <form onSubmit={handleSubmit} className="mt-12 flex flex-col gap-8">
       <label htmlFor="name" className="flex flex-col">
         <span className="text-white font-medium mb-4">Your Name</span>
         <input
           type="text"
           name="name"
           id="name"
+          required
+          maxLength={100}
           value={form.name}
           onChange={handleChange}
           placeholder="What's your name?"
@@ -85,6 +65,8 @@ const ContactForm = () => {
           type="email"
           name="email"
           id="email"
+          required
+          maxLength={254}
           value={form.email}
           onChange={handleChange}
           placeholder="What's your email?"
@@ -97,18 +79,44 @@ const ContactForm = () => {
           rows={7}
           name="message"
           id="message"
+          required
+          maxLength={5000}
           value={form.message}
           onChange={handleChange}
           placeholder="What do you want to say?"
           className={inputClass}
         />
       </label>
-      <button
-        type="submit"
-        className="bg-tertiay py-3 px-8 outline-none w-fit font-bold shadow-md shadow-primary rounded-xl"
-      >
-        {loading ? "Sending...." : "Send"}
-      </button>
+
+      {/* Honeypot: hidden from people, filled in by bots. */}
+      <input
+        type="text"
+        name="company"
+        value={form.company}
+        onChange={handleChange}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
+
+      <div className="flex items-center gap-4">
+        <button
+          type="submit"
+          disabled={sending}
+          className="bg-tertiay py-3 px-8 outline-none w-fit font-bold shadow-md shadow-primary rounded-xl disabled:opacity-60"
+        >
+          {sending ? "Sending...." : "Send"}
+        </button>
+        {(status.kind === "sent" || status.kind === "error") && (
+          <p
+            role="status"
+            className={`text-[14px] ${status.kind === "sent" ? "text-white" : "text-[#ff8a8a]"}`}
+          >
+            {status.message}
+          </p>
+        )}
+      </div>
     </form>
   );
 };

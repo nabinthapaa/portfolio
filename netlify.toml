@@ -1,0 +1,8 @@
+[build]
+  command = "yarn build"
+
+# Builds Next in standalone mode and serves it from a function. Prerendered
+# pages are still served from the CDN (the handler sets preferStatic), so only
+# /api/* actually invokes it.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
