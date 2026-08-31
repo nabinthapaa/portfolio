@@ -1,5 +1,5 @@
-import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
+"use client";
+
 import {
   Decal,
   Float,
@@ -7,7 +7,10 @@ import {
   Preload,
   useTexture,
 } from "@react-three/drei";
-import { CanvasLoader } from ".";
+import { Canvas } from "@react-three/fiber";
+import { Suspense } from "react";
+import CanvasLoader from "../Loader";
+import { LEGACY_LIGHT_SCALE } from "@/utils/lights";
 
 interface BallCanvasProps {
   icon: string;
@@ -18,8 +21,11 @@ const Ball = ({ icon }: BallCanvasProps) => {
 
   return (
     <Float speed={1.75} rotationIntensity={1} floatIntensity={2}>
-      <ambientLight intensity={0.25} />
-      <directionalLight intensity={0.75} position={[0, 0, 0.05]} />
+      <ambientLight intensity={0.25 * LEGACY_LIGHT_SCALE} />
+      <directionalLight
+        intensity={0.75 * LEGACY_LIGHT_SCALE}
+        position={[0, 0, 0.05]}
+      />
       <mesh castShadow receiveShadow scale={2.75}>
         <icosahedronGeometry args={[1, 1]} />
         <meshStandardMaterial
@@ -40,11 +46,8 @@ const Ball = ({ icon }: BallCanvasProps) => {
 
 const BallCanvas = ({ icon }: BallCanvasProps) => {
   return (
-    <Canvas
-      className="absolute inset-0"
-      frameloop="demand"
-      gl={{ preserveDrawingBuffer: true }}
-    >
+    // No frameloop="demand": it would freeze <Float> on its first frame.
+    <Canvas className="absolute inset-0" gl={{ preserveDrawingBuffer: true }}>
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls enableZoom={false} />
         <Ball icon={icon} />

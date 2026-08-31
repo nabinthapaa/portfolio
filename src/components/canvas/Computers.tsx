@@ -1,57 +1,63 @@
-import { Suspense, useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+"use client";
+
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
-import { CanvasLoader } from ".";
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useSyncExternalStore } from "react";
+import CanvasLoader from "../Loader";
+import { LEGACY_DECAY, LEGACY_LIGHT_SCALE } from "@/utils/lights";
 
 interface ComputersProps {
   isMobile: boolean;
 }
 
-const Computers: React.FC<ComputersProps> = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+const Computers = ({ isMobile }: ComputersProps) => {
+  const computer = useGLTF("/desktop_pc/scene.glb");
+
   return (
     <mesh>
-      <hemisphereLight intensity={0.15} groundColor="black" />
-      <pointLight intensity={1} />
-      <spotLight position={[-20, 50, 10]} angle={0.12} penumbra={1} />
+      <hemisphereLight
+        intensity={0.15 * LEGACY_LIGHT_SCALE}
+        groundColor="black"
+      />
+      <pointLight intensity={1 * LEGACY_LIGHT_SCALE} decay={LEGACY_DECAY} />
+      <spotLight
+        position={[-20, 50, 10]}
+        angle={0.12}
+        penumbra={1}
+        intensity={1 * LEGACY_LIGHT_SCALE}
+        decay={LEGACY_DECAY}
+      />
       <primitive
         object={computer.scene}
         scale={isMobile ? 0.3 : 0.75}
         position={isMobile ? [0, -1.85, -0.45] : [0, -2.75, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
-        intensity={1}
-        castShadow
-        shadowMapSize={1024}
       />
     </mesh>
   );
 };
 
+const MOBILE_QUERY = "(max-width: 500px)";
+
+const subscribeToMobileQuery = (onChange: () => void) => {
+  const mediaQuery = window.matchMedia(MOBILE_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+  return () => mediaQuery.removeEventListener("change", onChange);
+};
+
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    setIsMobile(mediaQuery.matches);
-
-    const handleMediaQueryChange = (e: MediaQueryListEvent) => {
-      setIsMobile(e.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
+  const isMobile = useSyncExternalStore(
+    subscribeToMobileQuery,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => false,
+  );
 
   return (
     <Canvas
       className="absolute inset-0"
       frameloop="demand"
-      shadows
+      dpr={[1, 1.5]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls

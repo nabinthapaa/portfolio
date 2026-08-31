@@ -1,39 +1,42 @@
-import  { Suspense, useRef } from "react";
+"use client";
+
+import { PointMaterial, Points, Preload } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import * as THREE from 'three';
-import {
-  Preload,
-  Points,
-  PointMaterial,
-} from "@react-three/drei";
-import * as random from "maath/random/dist/maath-random.cjs";
+import { inSphere } from "maath/random";
+import { Suspense, useRef, useState } from "react";
+import type * as THREE from "three";
 
-interface StarProps{
-  points?:number[] 
-}
+// inSphere fills xyz triples; a length not divisible by 3 yields NaN positions.
+const STAR_COUNT = 1667;
 
-const Stars = (props: StarProps) => {
+const Stars = () => {
   const ref = useRef<THREE.Points>(null);
-  const sphere = random.inSphere(new Float32Array(5000),{radius:1.2})
+  const [sphere] = useState(
+    () =>
+      inSphere(new Float32Array(STAR_COUNT * 3), {
+        radius: 1.2,
+      }) as Float32Array,
+  );
 
   useFrame((_, delta) => {
-    if(!ref.current) return;
-    ref.current.rotation.x += delta/10;
-    ref.current.rotation.y += delta/15;
-  })
+    if (!ref.current) return;
+    ref.current.rotation.x += delta / 10;
+    ref.current.rotation.y += delta / 15;
+  });
+
   return (
-      <group rotation={[0,0,Math.PI/4]}>
-        <Points ref={ref} positions={sphere as Float32Array} stride={3} frustumCulled {...props}>
-          <PointMaterial
-              transparent
-              color="#f272c8"
-              size={0.002}
-              sizeAttenuation
-              depthWrite={false}
-          />
-        </Points>
-      </group>
-    );
+    <group rotation={[0, 0, Math.PI / 4]}>
+      <Points ref={ref} positions={sphere} stride={3} frustumCulled>
+        <PointMaterial
+          transparent
+          color="#f272c8"
+          size={0.002}
+          sizeAttenuation
+          depthWrite={false}
+        />
+      </Points>
+    </group>
+  );
 };
 
 const StarsCanvas = () => {

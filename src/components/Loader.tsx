@@ -1,3 +1,5 @@
+"use client";
+
 import { Html, useProgress } from "@react-three/drei";
 
 const Loader = () => {
@@ -11,9 +13,11 @@ const Loader = () => {
             color: "#f1f1f1",
             fontSize: 14,
             fontWeight: 800,
-            marginTop: 40
+            marginTop: 40,
           }}
-        >{progress.toFixed(2)}%</p>
+        >
+          {progress.toFixed(2)}%
+        </p>
       </span>
     </Html>
   );
