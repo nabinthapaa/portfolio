@@ -1,13 +1,12 @@
-import "react-vertical-timeline-component/style.min.css";
+import * as motion from "framer-motion/client";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import { motion } from "framer-motion";
-import { styles } from "../Styles";
-import { experiences } from "../constants";
-import { SectionWrapper } from "../HOC";
-import { textVariant } from "../utils/motion";
+} from "./client/VerticalTimeline";
+import { experiences } from "@/constants";
+import SectionWrapper from "@/hoc/SectionWrapper";
+import { styles } from "@/styles";
+import { textVariant } from "@/utils/motion";
 
 interface ExperienceCardProps {
   experience: {
@@ -32,19 +31,29 @@ const ExperienceCard = ({ experience }: ExperienceCardProps) => {
       iconStyle={{ background: experience.iconBg }}
       icon={
         <div className="w-full h-full flex justify-center items-center">
-          <img src={experience.icon} alt={experience.company_name} className="w-[60%] h-[60%] object-contain" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={experience.icon}
+            alt={experience.company_name}
+            className="w-[60%] h-[60%] object-contain"
+          />
         </div>
       }
     >
       <div>
         <h3 className="text-white text-[24px] font-bold">{experience.title}</h3>
-        <p className="text-secondary text-[16px] font-semibold" style={{margin:0 }}>{experience.company_name}</p>
+        <p
+          className="text-secondary text-[16px] font-semibold"
+          style={{ margin: 0 }}
+        >
+          {experience.company_name}
+        </p>
         <ul className="mt-5 list-disc ml-5 space-y-2">
           {experience.points.map((point, index) => (
             <motion.li
               variants={textVariant(0.5)}
               key={`experience-points-${index}`}
-              className={`text-white-100 text-[14px] pl-1 tracking-wider`}
+              className="text-white-100 text-[14px] pl-1 tracking-wider"
             >
               {point}
             </motion.li>

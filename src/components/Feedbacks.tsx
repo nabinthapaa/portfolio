@@ -1,52 +1,69 @@
-import { motion } from 'framer-motion';
-import { styles } from '../Styles';
-import { SectionWrapper } from '../HOC';
-import { fadeIn, textVariant } from '../utils/motion';
-import { testimonials } from '../constants';
+import * as motion from "framer-motion/client";
+import { testimonials } from "@/constants";
+import SectionWrapper from "@/hoc/SectionWrapper";
+import { styles } from "@/styles";
+import { fadeIn, textVariant } from "@/utils/motion";
+
+const SHOW_TESTIMONIALS: boolean = false;
 
 interface FeedbackCardProps {
-  testimonial: string
-  name: string
-  designation: string
-  company: string
-  image: string
-  index: number
+  testimonial: string;
+  name: string;
+  designation: string;
+  company: string;
+  image: string;
+  index: number;
 }
 
-const FeedbackCard = ({ testimonial, name, designation, company, image, index }: FeedbackCardProps) => {
-
+const FeedbackCard = ({
+  testimonial,
+  name,
+  designation,
+  company,
+  image,
+  index,
+}: FeedbackCardProps) => {
   return (
     <motion.div
       variants={fadeIn("", "spring", index * 0.5, 0.75)}
-      className='bg-black-200 rounded-3xl p-10 xs:w-[320px] w-full'
+      className="bg-black-200 rounded-3xl p-10 xs:w-[320px] w-full"
     >
-      <p className="text-white font-black text-[48px]">"</p>
-      <div className='mt-1 '>
-
-        <p className='text-white tracking-wider text-[18px]'>{testimonial}</p>
-        <div className='mt-7 flex justify-between items-center gap-1'>
-          <div className='flex-1 flex flex-col'>
-            <p className='text-white font-medium text-[16px]'><span className='blue-text-gradient'>@</span>{name}</p>
-            <p className='mt-1 text-secondary tex-[12px]'>{designation} of {company}</p>
+      <p className="text-white font-black text-[48px]">&quot;</p>
+      <div className="mt-1">
+        <p className="text-white tracking-wider text-[18px]">{testimonial}</p>
+        <div className="mt-7 flex justify-between items-center gap-1">
+          <div className="flex-1 flex flex-col">
+            <p className="text-white font-medium text-[16px]">
+              <span className="blue-text-gradient">@</span>
+              {name}
+            </p>
+            <p className="mt-1 text-secondary tex-[12px]">
+              {designation} of {company}
+            </p>
           </div>
-          <img src={image} alt={name} className='w-10 h-10 rounded-full object-cover' />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image}
+            alt={name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
         </div>
       </div>
     </motion.div>
-  )
-}
-
+  );
+};
 
 const Feedbacks = () => {
-  return null;
+  if (!SHOW_TESTIMONIALS) return null;
+
   return (
     <div className="mt-12 bg-black-100 rounded-[20px]">
-      <div className={`${styles.padding} bg-tertiary rounded-2xl min-h-[300px]`}>
-        <motion.div
-          variants={textVariant(1)}
-        >
-          <p className={`${styles.sectionSubText}`}>What others Say</p>
-          <h2 className={`${styles.sectionHeadText}`}>Testimonials.</h2>
+      <div
+        className={`${styles.padding} bg-tertiary rounded-2xl min-h-[300px]`}
+      >
+        <motion.div variants={textVariant(1)}>
+          <p className={styles.sectionSubText}>What others Say</p>
+          <h2 className={styles.sectionHeadText}>Testimonials.</h2>
         </motion.div>
       </div>
       <div className={`${styles.paddingX} -mt-20 pb-14 flex flex-wrap gap-7`}>
@@ -55,7 +72,7 @@ const Feedbacks = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SectionWrapper(Feedbacks, "")
+export default SectionWrapper(Feedbacks, "");

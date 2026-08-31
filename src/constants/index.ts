@@ -17,7 +17,7 @@ import {
   countries,
   intuji,
   careinfo,
-} from "../assets";
+} from "@/assets";
 
 export const navLinks = [
   {
@@ -38,7 +38,7 @@ const services = [
   {
     title: "Software Engineer",
     icon: web,
-  }
+  },
 ];
 
 const technologies = [
@@ -85,7 +85,7 @@ const technologies = [
   {
     name: "figma",
     icon: figma,
-  }
+  },
 ];
 
 const experiences = [
@@ -124,7 +124,7 @@ const experiences = [
       "Designed PostgreSQL schemas, wrote raw SQL queries, and used Knex.js for database operations and migrations",
       "Learned about MVC patterns and separation of concerns while building a express.js application with socket for making chat applications",
       "Containerized applications using Docker and managed CI/CD workflows using Github Actions",
-      "Utilized Git for version control and collaborative development across projects"
+      "Utilized Git for version control and collaborative development across projects",
     ],
   },
 ];
@@ -199,7 +199,7 @@ const projects = [
       {
         name: "Typescript",
         color: "blue-text-gradient",
-      }
+      },
     ],
     image: dictionary,
     source_code_link: "https://github.com/Eragon580101/Dictionary",
@@ -225,7 +225,7 @@ const projects = [
     ],
     image: countries,
     source_code_link: "https://github.com/Eragon580101/Countries",
-    website_link: "https://courageous-dusk-897dd4.netlify.app/"
+    website_link: "https://courageous-dusk-897dd4.netlify.app/",
   },
 ];
 

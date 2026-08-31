@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import { styles } from "../Styles";
-import { ComputersCanvas } from ".";
+import * as motion from "framer-motion/client";
+import { ComputersCanvas } from "./canvas";
+import { styles } from "@/styles";
 
 const Hero = () => {
   return (
@@ -19,8 +19,8 @@ const Hero = () => {
           <p className={`${styles.heroSubText} mt-2 text-white-100`}>
             I am a <span className="text-[#915eff]">Software Engineer</span>{" "}
             based in Kathmandu, Nepal.
-            <br className="sm:block hidden" /> I enjoy crafting little projects and tools
-            that help people in simple, meaningful ways.
+            <br className="sm:block hidden" /> I enjoy crafting little projects
+            and tools that help people in simple, meaningful ways.
           </p>
         </div>
       </div>
@@ -33,7 +33,6 @@ const Hero = () => {
               animate={{
                 y: [0, 24, 0],
               }}
-
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
@@ -41,7 +40,6 @@ const Hero = () => {
               }}
               className="h-3 w-3 bg-secondary rounded-full mb-1"
             />
-
           </div>
         </a>
       </div>
